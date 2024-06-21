@@ -1,0 +1,7 @@
+<resources>
+    <string name="app_name">Muhasib</string>
+    <string name="opslaan">Opslaan</string>
+    <string name="voer_de_naam_van_de_gebruiker_in">Naam</string>
+    <string name="naam_van_gebruiker">Naam van gebruiker</string>
+    <string name="terug">Terug</string>
+</resources>
