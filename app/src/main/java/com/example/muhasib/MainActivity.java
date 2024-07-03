@@ -61,7 +61,7 @@ public class MainActivity extends AppCompatActivity {
         recyclerView.setLayoutManager(new LinearLayoutManager(this));
 
         // Haal de LiveData op van de database en observeer deze in de MainActivity
-        amountLiveData = db.amountDao().getAll(); // Ophalen van de amounts uit de database
+        amountLiveData = db.amountDao().getAllWithStatus(true); // Ophalen van de amounts uit de database
 
         // Observer voor de LiveData om de RecyclerView bij te werken wanneer de data verandert
         amountLiveData.observe(this, new Observer<List<Amount>>() {
@@ -78,6 +78,12 @@ public class MainActivity extends AppCompatActivity {
             public void onAmountDeleteClick(Amount amount) {
                 db.amountDao().delete(amount);
                 Toast.makeText(MainActivity.this, "Bedrag verwijderd", Toast.LENGTH_SHORT).show();
+            }
+
+            @Override
+            public void onStatusChanged(Amount amount) {
+                db.amountDao().updateStatus(amount.getId(), amount.getStatus());
+                Toast.makeText(MainActivity.this, "Status bijgewerkt", Toast.LENGTH_SHORT).show();
             }
         });
         recyclerView.setAdapter(amountAdapter);
@@ -167,7 +173,7 @@ public class MainActivity extends AppCompatActivity {
                     return;
                 }
 
-                Amount newAmount = new Amount(amount, description, new Date(), isPositive, selectedUser.getId());
+                Amount newAmount = new Amount(amount, description, new Date(), isPositive,true, selectedUser.getId());
                 db.amountDao().insert(newAmount);
 
                 Toast.makeText(MainActivity.this, "Bedrag succesvol toegevoegd", Toast.LENGTH_SHORT).show();

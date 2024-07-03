@@ -31,14 +31,19 @@ public class Amount {
     @ColumnInfo
     private boolean isPositive;
 
+
+    @ColumnInfo
+    private boolean status;
+
     @ColumnInfo
     private int userId; // Foreign key to User
 
-    public Amount(double amount, String description, Date date, boolean isPositive, int userId) {
+    public Amount(double amount, String description, Date date, boolean isPositive,boolean status, int userId) {
         this.amount = amount;
         this.description = description;
         this.date = date;
         this.isPositive = isPositive;
+        this.status = status;
         this.userId = userId;
     }
 
@@ -80,6 +85,15 @@ public class Amount {
 
     public void setPositive(boolean positive) {
         isPositive = positive;
+    }
+
+
+    public boolean getStatus() {
+        return status;
+    }
+
+    public void setStatus(boolean status) {
+        this.status = status;
     }
 
     public int getUserId() {

@@ -20,6 +20,12 @@ public interface AmountDao {
     LiveData<List<Amount>> getAll();
 
 
+    @Query("SELECT * FROM amount  WHERE status = :status ORDER BY date DESC")
+    LiveData<List<Amount>> getAllWithStatus(boolean status);
+
+    @Query("UPDATE amount SET status = :status WHERE id = :id")
+    void updateStatus(int id, boolean status);
+
     @Delete
     void delete(Amount amount);
 }

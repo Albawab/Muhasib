@@ -5,6 +5,7 @@ import android.graphics.Color;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.CheckBox;
 import android.widget.ImageView;
 import android.widget.TextView;
 
@@ -27,6 +28,7 @@ public class AmountAdapter extends RecyclerView.Adapter<AmountAdapter.AmountView
 
     public interface OnAmountClickListener {
         void onAmountDeleteClick(Amount amount);
+        void onStatusChanged(Amount amount);
     }
 
     public AmountAdapter(Context context, List<Amount> amountList, OnAmountClickListener listener) {
@@ -64,6 +66,7 @@ public class AmountAdapter extends RecyclerView.Adapter<AmountAdapter.AmountView
         TextView dateTextView;
         TextView descriptionTextView;
         ImageView deleteImageView;
+        CheckBox statusCheckbox;
 
         public AmountViewHolder(@NonNull View itemView) {
             super(itemView);
@@ -72,6 +75,7 @@ public class AmountAdapter extends RecyclerView.Adapter<AmountAdapter.AmountView
             dateTextView = itemView.findViewById(R.id.date_text_view);
             descriptionTextView = itemView.findViewById(R.id.description_text_view);
             deleteImageView = itemView.findViewById(R.id.delete_image_view);
+            statusCheckbox = itemView.findViewById(R.id.checkBox);
         }
 
         public void bind(final Amount amount, final OnAmountClickListener listener) {
@@ -92,19 +96,23 @@ public class AmountAdapter extends RecyclerView.Adapter<AmountAdapter.AmountView
 
             // Stel de achtergrondkleur in op basis van isPositive
             if (amount.isPositive()) {
-                amountTextView.setTextColor(ContextCompat.getColor(context, R.color.green)); // Of een andere gewenste groene kleur
+                amountTextView.setTextColor(ContextCompat.getColor(context, R.color.green));
             } else {
-                amountTextView.setBackgroundColor(Color.TRANSPARENT); // Terug naar standaard kleur als niet positief
+                amountTextView.setBackgroundColor(Color.TRANSPARENT);
                 amountTextView.setTextColor(ContextCompat.getColor(context, R.color.black));
             }
 
-            // Set delete listener
-            deleteImageView.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    listener.onAmountDeleteClick(amount);
-                }
+            // Stel de status in op de checkbox
+            statusCheckbox.setChecked(amount.getStatus());
+
+            // Luister naar checkbox wijzigingen
+            statusCheckbox.setOnCheckedChangeListener((buttonView, isChecked) -> {
+                amount.setStatus(isChecked);
+                listener.onStatusChanged(amount);  // Roep de onStatusChanged method aan
             });
+
+            // Set delete listener
+            deleteImageView.setOnClickListener(v -> listener.onAmountDeleteClick(amount));
         }
     }
 }
